@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Net;
 
 namespace TonicTodoList.Controllers
 {
@@ -30,6 +30,80 @@ namespace TonicTodoList.Controllers
                     return Array.Empty<TodoListItem>();
                 }
                 return items.ToArray();
+            }
+        }
+
+        [HttpPost(Name = "AddTodoListItem")]
+        public HttpStatusCode Post(TodoListItem todoListItem)
+        {
+            using (_context)
+            {
+                try
+                {
+                    _context.Add(todoListItem);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
+            }
+            return HttpStatusCode.OK;
+        }
+
+        [HttpDelete(Name = "DeleteTodoListItem")]
+        public HttpStatusCode DeleteItem(int id)
+        {
+            using (_context)
+            {
+                var itemList = _context.ListEntries;
+                if (itemList == null)
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
+                var item = itemList.Find(id);
+                if (item == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                try
+                {
+                    _context.Remove(item);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
+                return HttpStatusCode.OK;
+            }
+        }
+
+        [HttpPut(Name = "CheckTodoListItem")]
+        public HttpStatusCode CheckItem(int id)
+        {
+            using (_context)
+            {
+                var itemList = _context.ListEntries;
+                if (itemList == null)
+                {
+                    return HttpStatusCode.InternalServerError;
+                }
+                var item = itemList.Find(id);
+                if(item == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                try{
+                    item.Done = true;
+                    _context.Update(item);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return HttpStatusCode.InternalServerError;
+                } 
+                return HttpStatusCode.OK;
             }
         }
     }
