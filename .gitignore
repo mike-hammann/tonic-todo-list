@@ -1,3 +1,4 @@
 TonicTodoList/.vs/
 TonicTodoList/TonicTodoList/bin/
 TonicTodoList/TonicTodoList/obj/
+*.user
