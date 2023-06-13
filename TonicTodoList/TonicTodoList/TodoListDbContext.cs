@@ -6,7 +6,7 @@ using TonicTodoList;
 
 public class TodoListDbContext : DbContext
 {
-    public DbSet<TodoListItem>? TodoListItems { get; set; }
+    public DbSet<TodoListItem>? ListEntries { get; set; }
 
     public TodoListDbContext(DbContextOptions<TodoListDbContext> dbContextOptions) : base(dbContextOptions) { }
 }

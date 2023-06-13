@@ -10,15 +10,27 @@ namespace TonicTodoList.Controllers
     {
         private readonly ILogger<TodoListController> _logger;
 
-        public TodoListController(ILogger<TodoListController> logger)
+
+        private readonly TodoListDbContext _context;
+
+        public TodoListController(ILogger<TodoListController> logger, TodoListDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet(Name = "GetTodoList")]
         public IEnumerable<TodoListItem> Get()
         {
-            return Array.Empty<TodoListItem>();
+            using (_context)
+            {
+                var items = _context.ListEntries;
+                if (items == null)
+                {
+                    return Array.Empty<TodoListItem>();
+                }
+                return items.ToArray();
+            }
         }
     }
 }
